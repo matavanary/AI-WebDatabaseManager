@@ -1,0 +1,210 @@
+:root {
+    --bg-color: #0f111a;
+    --sidebar-bg: #161925;
+    --sidebar-width: 250px;
+    --header-bg: rgba(22, 25, 37, 0.8);
+    --text-primary: #e2e8f0;
+    --text-secondary: #94a3b8;
+    --accent-primary: #3b82f6;
+    --accent-hover: #2563eb;
+    --border-color: #1e293b;
+    --card-bg: #1e2130;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-primary);
+    font-family: 'Inter', sans-serif;
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    overflow: hidden;
+}
+
+/* App Container */
+.app-container {
+    display: flex;
+    height: 100vh;
+    width: 100vw;
+}
+
+/* Sidebar */
+.sidebar {
+    width: var(--sidebar-width);
+    background-color: var(--sidebar-bg);
+    border-right: 1px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+    z-index: 100;
+}
+
+.sidebar-header {
+    height: 60px;
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    border-bottom: 1px solid var(--border-color);
+    font-size: 1.25rem;
+    font-weight: 600;
+    gap: 10px;
+}
+
+.sidebar-nav {
+    padding: 15px 10px;
+    flex: 1;
+}
+
+.sidebar-nav .nav-link {
+    color: var(--text-secondary);
+    padding: 10px 15px;
+    border-radius: 8px;
+    margin-bottom: 5px;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.sidebar-nav .nav-link:hover, .sidebar-nav .nav-link.active {
+    background-color: rgba(59, 130, 246, 0.1);
+    color: var(--accent-primary);
+}
+
+.sidebar-nav .nav-link i {
+    width: 20px;
+    text-align: center;
+}
+
+/* Main Content */
+.main-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+/* Top Header */
+.top-header {
+    height: 60px;
+    background: var(--header-bg);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border-color);
+    padding: 0 20px;
+    z-index: 90;
+}
+
+.header-search {
+    width: 300px;
+}
+
+.header-search .input-group-text {
+    color: var(--text-secondary);
+}
+
+.header-search input {
+    color: var(--text-primary);
+}
+
+.header-search input:focus {
+    box-shadow: none;
+    outline: none;
+}
+
+/* Content Wrapper */
+.content-wrapper {
+    flex: 1;
+    overflow-y: auto;
+}
+
+/* Premium Login Form */
+.login-container {
+    width: 100%;
+    max-width: 400px;
+    padding: 2rem;
+    background: var(--card-bg);
+    border-radius: 16px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+    border: 1px solid var(--border-color);
+}
+
+.login-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.login-header i {
+    font-size: 3rem;
+    color: var(--accent-primary);
+    margin-bottom: 1rem;
+}
+
+.form-control {
+    background-color: rgba(15, 17, 26, 0.5);
+    border-color: var(--border-color);
+    color: var(--text-primary);
+}
+
+.form-control:focus {
+    background-color: rgba(15, 17, 26, 0.8);
+    border-color: var(--accent-primary);
+    color: var(--text-primary);
+    box-shadow: 0 0 0 0.25rem rgba(59, 130, 246, 0.25);
+}
+
+.btn-primary {
+    background-color: var(--accent-primary);
+    border-color: var(--accent-primary);
+}
+
+.btn-primary:hover {
+    background-color: var(--accent-hover);
+    border-color: var(--accent-hover);
+}
+
+/* Cards */
+.card {
+    background-color: var(--card-bg);
+    border-color: var(--border-color);
+    border-radius: 12px;
+}
+
+.card-header {
+    background-color: rgba(0,0,0,0.1);
+    border-bottom-color: var(--border-color);
+}
+
+/* DataTables Overrides for Dark Theme */
+table.dataTable {
+    color: var(--text-primary) !important;
+}
+
+table.dataTable thead th, table.dataTable thead td {
+    border-bottom: 1px solid var(--border-color) !important;
+    background-color: var(--sidebar-bg);
+}
+
+table.dataTable.no-footer {
+    border-bottom: 1px solid var(--border-color) !important;
+}
+
+.dataTables_wrapper .dataTables_length, 
+.dataTables_wrapper .dataTables_filter, 
+.dataTables_wrapper .dataTables_info, 
+.dataTables_wrapper .dataTables_processing, 
+.dataTables_wrapper .dataTables_paginate {
+    color: var(--text-primary) !important;
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button {
+    color: var(--text-primary) !important;
+}
+
+.table {
+    color: var(--text-primary);
+    border-color: var(--border-color);
+}
+
+.table-hover>tbody>tr:hover>* {
+    color: var(--text-primary);
+    background-color: rgba(255,255,255,0.05);
+}
