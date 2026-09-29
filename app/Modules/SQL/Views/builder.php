@@ -1,6 +1,6 @@
-<div class="p-4 w-100 h-100 d-flex flex-column" style="overflow-y: auto;">
-    <div class="mb-4">
-        <h4 class="text-white"><i class="fas fa-magic text-primary me-2"></i>Query Builder</h4>
+<div class="page-container">
+    <div class="page-heading">
+        <h1 class="page-title"><i class="fas fa-magic text-primary me-2" aria-hidden="true"></i>Query Builder</h1>
         <p class="text-secondary">Visually generate SQL queries without writing code.</p>
     </div>
 
@@ -12,7 +12,7 @@
                         <div class="row mb-3">
                             <div class="col-md-6">
                                 <label class="form-label text-secondary">Database</label>
-                                <select class="form-select bg-dark text-white border-secondary" id="b-db" required>
+                                <select class="form-select bg-body-tertiary text-body border-secondary" id="b-db" required>
                                     <option value="">-- Select Database --</option>
                                     <?php foreach ($databases as $db): ?>
                                         <option value="<?= htmlspecialchars($db) ?>"><?= htmlspecialchars($db) ?></option>
@@ -21,15 +21,15 @@
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label text-secondary">Table</label>
-                                <select class="form-select bg-dark text-white border-secondary" id="b-table" required disabled>
+                                <select class="form-select bg-body-tertiary text-body border-secondary" id="b-table" required disabled>
                                     <option value="">-- Select Table --</option>
                                 </select>
                             </div>
                         </div>
-                        
+
                         <div class="mb-3">
                             <label class="form-label text-secondary">Action</label>
-                            <select class="form-select bg-dark text-white border-secondary" id="b-action">
+                            <select class="form-select bg-body-tertiary text-body border-secondary" id="b-action">
                                 <option value="SELECT">SELECT</option>
                                 <option value="INSERT">INSERT</option>
                                 <option value="UPDATE">UPDATE</option>
@@ -38,8 +38,8 @@
                         </div>
 
                         <div class="mb-3" id="columns-container">
-                            <label class="form-label text-secondary">Columns (Ctrl+Click for multiple)</label>
-                            <select multiple class="form-select bg-dark text-white border-secondary" id="b-columns" style="height: 120px;" disabled>
+                            <label class="form-label text-secondary">Columns (select one or more)</label>
+                            <select multiple class="form-select bg-body-tertiary text-body border-secondary" id="b-columns" style="height: 120px;" disabled>
                                 <option value="*">* (All Columns)</option>
                             </select>
                         </div>
@@ -48,7 +48,7 @@
                             <label class="form-label text-secondary d-flex justify-content-between">
                                 <span>Conditions (WHERE)</span>
                                 <button type="button" class="btn btn-sm btn-outline-primary py-0" id="add-condition">
-                                    <i class="fas fa-plus"></i> Add
+                                    <i class="fas fa-plus" aria-hidden="true"></i> Add
                                 </button>
                             </label>
                             <div id="conditions-list" class="d-flex flex-column gap-2">
@@ -57,7 +57,7 @@
                         </div>
 
                         <button type="submit" class="btn btn-primary w-100 fw-bold">
-                            <i class="fas fa-bolt me-1"></i> Generate SQL
+                            <i class="fas fa-bolt me-1" aria-hidden="true"></i> Generate SQL
                         </button>
                     </form>
                 </div>
@@ -67,19 +67,19 @@
         <div class="col-lg-4">
             <div class="card border-0 shadow-sm sticky-top" style="background: var(--card-bg); top: 20px;">
                 <div class="card-header border-bottom border-secondary border-opacity-25 bg-transparent py-3">
-                    <h5 class="mb-0 text-white"><i class="fas fa-code text-info me-2"></i>Generated SQL</h5>
+                    <h5 class="mb-0 text-body"><i class="fas fa-code text-info me-2" aria-hidden="true"></i>Generated SQL</h5>
                 </div>
                 <div class="card-body p-3">
-                    <div class="bg-dark p-3 rounded mb-3 border border-secondary" style="min-height: 150px; font-family: monospace;">
-                        <code id="generated-sql" class="text-white">-- Your SQL will appear here</code>
+                    <div class="bg-body-tertiary p-3 rounded mb-3 border border-secondary" style="min-height: 150px; font-family: monospace;">
+                        <code id="generated-sql" class="text-body">-- Your SQL will appear here</code>
                     </div>
-                    
+
                     <button class="btn btn-outline-info w-100 mb-2" id="copy-sql" disabled>
-                        <i class="fas fa-copy me-1"></i> Copy to Clipboard
+                        <i class="fas fa-copy me-1" aria-hidden="true"></i> Copy to Clipboard
                     </button>
-                    
-                    <a href="<?= \App\Core\Application::asset('sql') ?>" class="btn btn-outline-success w-100" id="run-sql" disabled>
-                        <i class="fas fa-external-link-alt me-1"></i> Open in Editor
+
+                    <a href="<?= \App\Core\Application::asset('sql') ?>" class="btn btn-outline-success w-100 disabled" id="run-sql" aria-disabled="true" tabindex="-1">
+                        <i class="fas fa-external-link-alt me-1" aria-hidden="true"></i> Open in Editor
                     </a>
                 </div>
             </div>
@@ -95,7 +95,7 @@ $(document).ready(function() {
     $('#b-db').change(function() {
         var db = $(this).val();
         var tableSelect = $('#b-table');
-        
+
         if (!db) {
             tableSelect.empty().append('<option value="">-- Select Table --</option>').prop('disabled', true);
             $('#b-columns').prop('disabled', true);
@@ -132,7 +132,7 @@ $(document).ready(function() {
     $('#b-table').change(function() {
         var table = $(this).val();
         var colSelect = $('#b-columns');
-        
+
         if (!table) {
             colSelect.prop('disabled', true);
             return;
@@ -160,18 +160,18 @@ $(document).ready(function() {
         var options = tableColumns.map(c => `<option value="${c}">${c}</option>`).join('');
         var html = `
             <div class="input-group input-group-sm condition-row">
-                <select class="form-select bg-dark text-white border-secondary cond-col">
+                <select class="form-select bg-body-tertiary text-body border-secondary cond-col">
                     ${options || '<option value="id">id</option>'}
                 </select>
-                <select class="form-select bg-dark text-white border-secondary cond-op" style="max-width: 100px;">
+                <select class="form-select bg-body-tertiary text-body border-secondary cond-op" style="max-width: 100px;">
                     <option value="=">=</option>
                     <option value=">">></option>
                     <option value="<"><</option>
                     <option value="LIKE">LIKE</option>
                 </select>
-                <input type="text" class="form-control bg-dark text-white border-secondary cond-val" placeholder="Value">
+                <input type="text" class="form-control bg-body-tertiary text-body border-secondary cond-val" placeholder="Value">
                 <button type="button" class="btn btn-outline-danger btn-remove-cond">
-                    <i class="fas fa-times"></i>
+                    <i class="fas fa-times" aria-hidden="true"></i>
                 </button>
             </div>
         `;
@@ -184,7 +184,7 @@ $(document).ready(function() {
 
     $('#builderForm').submit(function(e) {
         e.preventDefault();
-        
+
         var conditions = [];
         $('.condition-row').each(function() {
             var col = $(this).find('.cond-col').val();
@@ -212,10 +212,15 @@ $(document).ready(function() {
                 if (json.success) {
                     $('#generated-sql').text(json.sql);
                     $('#copy-sql, #run-sql').prop('disabled', false);
-                    
+                    $('#run-sql').removeClass('disabled').removeAttr('tabindex').attr('aria-disabled', 'false');
+
                     // Save to localstorage for editor
-                    localStorage.setItem('pending_sql', json.sql);
-                    localStorage.setItem('pending_db', $('#b-db').val());
+                    try {
+                        localStorage.setItem('pending_sql', json.sql);
+                        localStorage.setItem('pending_db', $('#b-db').val());
+                    } catch (e) {
+                        notify('warning', 'Browser storage is unavailable. Copy the SQL into the editor.');
+                    }
                 } else {
                     notify('error', json.message);
                 }

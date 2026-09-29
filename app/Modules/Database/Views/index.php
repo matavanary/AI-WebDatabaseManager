@@ -1,33 +1,17 @@
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.12/themes/default-dark/style.min.css" />
-
-<div class="row h-100 g-0">
-    <div class="col-md-3 h-100 border-end border-secondary border-opacity-25 bg-dark">
-        <div class="p-3 border-bottom border-secondary border-opacity-25 d-flex justify-content-between align-items-center">
-            <h6 class="mb-0">Explorer</h6>
-            <button class="btn btn-sm btn-outline-secondary border-0" id="refresh-tree">
-                <i class="fas fa-sync-alt"></i>
-            </button>
-        </div>
-        <div class="p-2">
-            <div class="input-group input-group-sm mb-3">
-                <span class="input-group-text bg-transparent border-secondary text-secondary"><i class="fas fa-search"></i></span>
-                <input type="text" class="form-control bg-transparent border-secondary text-light" id="tree-search" placeholder="Search...">
-            </div>
-        </div>
-        <div class="tree-container p-2" style="overflow-y: auto; height: calc(100vh - 180px);">
-            <div id="db-tree"></div>
-        </div>
-    </div>
-    <div class="col-md-9 h-100 bg-dark d-flex flex-column">
-        <div id="table-viewer-container" class="w-100 h-100 d-flex align-items-center justify-content-center text-secondary">
-            <div class="text-center">
-                <i class="fas fa-table fs-1 mb-3 text-secondary opacity-50"></i>
-                <h5>Select a table from the explorer</h5>
-            </div>
-        </div>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.12/themes/default/style.min.css">
+<div class="page-container">
+    <div class="page-heading"><div><h1 class="page-title">Explorer</h1><p>Browse your databases and work with table data.</p></div></div>
+    <div class="explorer-workspace">
+        <section class="explorer-panel" aria-label="Database explorer">
+            <div class="explorer-panel-header"><h2>Databases</h2><button class="icon-button" id="refresh-tree" aria-label="Refresh databases"><i class="fas fa-rotate" aria-hidden="true"></i></button></div>
+            <div class="p-3 pb-0"><label for="tree-search" class="visually-hidden">Find a database or table</label><input type="search" class="form-control" id="tree-search" placeholder="Find a database or table..."></div>
+            <div class="tree-container"><div id="db-tree"></div></div>
+        </section>
+        <section id="table-viewer-container" aria-label="Table data">
+            <div class="empty-state"><i class="fas fa-table" aria-hidden="true"></i><strong>Select a table to get started</strong><p>Choose a database and table from the explorer.</p></div>
+        </section>
     </div>
 </div>
-
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.12/jstree.min.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
@@ -43,6 +27,12 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     function initTree() {
+        $('#db-tree').on('loaded.jstree refresh.jstree', function() {
+            $('#tree-empty').remove();
+            if (!$('#db-tree').jstree(true).get_json().length) {
+                $('#db-tree').after('<p class="text-secondary small p-2" id="tree-empty">No databases available. Select a server connection from the menu above.</p>');
+            }
+        });
         $('#db-tree').jstree({
             'core': {
                 'data': {
@@ -57,7 +47,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
                 },
                 'themes': {
-                    'name': 'default-dark',
+                    'name': 'default',
                     'dots': true,
                     'icons': true
                 }
@@ -88,7 +78,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function loadTableViewer(db, table) {
         $('#table-viewer-container').html('<div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div>');
-        
+
         // We will implement this in the Table Viewer Module
         $.get(window.BASE_URL + '/table/view', { db: db, table: table }, function(response) {
             $('#table-viewer-container').html(response);
@@ -99,19 +89,3 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 </script>
-
-<style>
-/* Adjust jstree for modern dark theme */
-.jstree-default-dark .jstree-wholerow-hovered {
-    background: rgba(59, 130, 246, 0.1);
-}
-.jstree-default-dark .jstree-wholerow-clicked {
-    background: rgba(59, 130, 246, 0.2);
-}
-.jstree-default-dark .jstree-node {
-    color: var(--text-primary);
-}
-.content-wrapper.p-4 {
-    padding: 0 !important; /* Remove padding for explorer view to fit screen */
-}
-</style>

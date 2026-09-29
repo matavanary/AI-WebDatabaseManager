@@ -1,6 +1,6 @@
-<div class="p-4 w-100 h-100 d-flex flex-column" style="overflow-y: auto;">
-    <div class="mb-4">
-        <h4 class="text-white"><i class="fas fa-table text-primary me-2"></i>Structure Management</h4>
+<div class="page-container">
+    <div class="page-heading">
+        <h1 class="page-title"><i class="fas fa-table text-primary me-2" aria-hidden="true"></i>Structure Management</h1>
         <p class="text-secondary">Visually create new tables without writing SQL.</p>
     </div>
 
@@ -10,7 +10,7 @@
                 <div class="row mb-4">
                     <div class="col-md-6">
                         <label class="form-label text-secondary">Target Database</label>
-                        <select class="form-select bg-dark text-white border-secondary" id="s-db" required>
+                        <select class="form-select bg-body-tertiary text-body border-secondary" id="s-db" required>
                             <option value="">-- Select Database --</option>
                             <?php foreach ($databases as $db): ?>
                                 <option value="<?= htmlspecialchars($db) ?>"><?= htmlspecialchars($db) ?></option>
@@ -19,20 +19,20 @@
                     </div>
                     <div class="col-md-6">
                         <label class="form-label text-secondary">Table Name</label>
-                        <input type="text" class="form-control bg-dark text-white border-secondary" id="s-table" placeholder="e.g. users" required>
+                        <input type="text" class="form-control bg-body-tertiary text-body border-secondary" id="s-table" placeholder="e.g. users" required>
                     </div>
                 </div>
 
                 <div class="d-flex justify-content-between align-items-center mb-3">
-                    <h5 class="text-white mb-0">Columns</h5>
+                    <h5 class="text-body mb-0">Columns</h5>
                     <button type="button" class="btn btn-sm btn-outline-info" id="addColumnBtn">
-                        <i class="fas fa-plus"></i> Add Column
+                        <i class="fas fa-plus" aria-hidden="true"></i> Add Column
                     </button>
                 </div>
 
                 <div class="table-responsive mb-4">
                     <table class="table table-bordered border-secondary" id="columnsTable">
-                        <thead class="table-dark">
+                        <thead class="">
                             <tr>
                                 <th>Name</th>
                                 <th>Type</th>
@@ -50,7 +50,7 @@
                 </div>
 
                 <button type="submit" class="btn btn-primary w-100 fw-bold">
-                    <i class="fas fa-save me-1"></i> Create Table
+                    <i class="fas fa-save me-1" aria-hidden="true"></i> Create Table
                 </button>
             </form>
         </div>
@@ -59,9 +59,9 @@
 
 <template id="columnTemplate">
     <tr class="column-row">
-        <td><input type="text" class="form-control form-control-sm bg-dark text-white border-secondary col-name" placeholder="Column Name" required></td>
+        <td><input type="text" class="form-control form-control-sm bg-body-tertiary text-body border-secondary col-name" placeholder="Column Name" required></td>
         <td>
-            <select class="form-select form-select-sm bg-dark text-white border-secondary col-type">
+            <select class="form-select form-select-sm bg-body-tertiary text-body border-secondary col-type">
                 <option value="INT">INT</option>
                 <option value="VARCHAR">VARCHAR</option>
                 <option value="TEXT">TEXT</option>
@@ -71,12 +71,12 @@
                 <option value="BOOLEAN">BOOLEAN</option>
             </select>
         </td>
-        <td><input type="text" class="form-control form-control-sm bg-dark text-white border-secondary col-length"></td>
+        <td><input type="text" class="form-control form-control-sm bg-body-tertiary text-body border-secondary col-length"></td>
         <td class="text-center align-middle"><input class="form-check-input col-pk" type="checkbox"></td>
         <td class="text-center align-middle"><input class="form-check-input col-ai" type="checkbox"></td>
         <td class="text-center align-middle"><input class="form-check-input col-null" type="checkbox"></td>
         <td class="text-center align-middle">
-            <button type="button" class="btn btn-sm btn-outline-danger btn-remove-col border-0"><i class="fas fa-trash"></i></button>
+            <button type="button" class="btn btn-sm btn-outline-danger btn-remove-col border-0"><i class="fas fa-trash" aria-hidden="true"></i></button>
         </td>
     </tr>
 </template>
@@ -90,7 +90,7 @@ $(document).ready(function() {
 
     // Add first column by default (usually id)
     addColumnRow();
-    
+
     // Setup first column as primary key AI
     setTimeout(function() {
         var firstRow = $('.column-row').first();
@@ -110,7 +110,7 @@ $(document).ready(function() {
 
     $('#createTableForm').submit(function(e) {
         e.preventDefault();
-        
+
         var columns = [];
         $('.column-row').each(function() {
             columns.push({

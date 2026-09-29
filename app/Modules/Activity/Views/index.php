@@ -1,6 +1,6 @@
-<div class="p-4 w-100 h-100 d-flex flex-column">
-    <div class="mb-4">
-        <h4 class="text-white"><i class="fas fa-history text-primary me-2"></i>Activity Log</h4>
+<div class="page-container">
+    <div class="page-heading">
+        <h1 class="page-title"><i class="fas fa-history text-primary me-2" aria-hidden="true"></i>Activity Log</h1>
         <p class="text-secondary">View user actions and system events.</p>
     </div>
 
@@ -37,19 +37,19 @@ $(document).ready(function() {
             type: 'GET'
         },
         columns: [
-            { 
+            {
                 data: 'created_at',
                 render: function(data) {
-                    return `<span class="text-secondary"><i class="far fa-clock me-1"></i>${data}</span>`;
+                    return `<span class="text-secondary"><i class="far fa-clock me-1" aria-hidden="true"></i>${data}</span>`;
                 }
             },
-            { 
+            {
                 data: 'username',
                 render: function(data) {
-                    return `<span class="fw-bold text-info"><i class="fas fa-user me-1"></i>${data}</span>`;
+                    return `<span class="fw-bold text-info"><i class="fas fa-user me-1" aria-hidden="true"></i>${data}</span>`;
                 }
             },
-            { 
+            {
                 data: 'action',
                 render: function(data) {
                     let badgeClass = 'bg-secondary';
@@ -64,7 +64,7 @@ $(document).ready(function() {
             { data: 'target_database' },
             { data: 'target_table' },
             { data: 'ip_address' },
-            { 
+            {
                 data: 'details',
                 render: function(data) {
                     if (!data) return '';
@@ -77,7 +77,7 @@ $(document).ready(function() {
         ],
         order: [[0, 'desc']],
         scrollX: true,
-        scrollY: 'calc(100vh - 350px)',
+        scrollY: 'min(55vh, 520px)',
         scrollCollapse: true,
         pageLength: 50,
         language: {

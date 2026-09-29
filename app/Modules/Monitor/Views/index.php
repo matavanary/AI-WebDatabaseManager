@@ -1,6 +1,6 @@
-<div class="p-4 w-100 h-100 d-flex flex-column">
-    <div class="mb-4">
-        <h4 class="text-white"><i class="fas fa-heartbeat text-primary me-2"></i>Server Monitor</h4>
+<div class="page-container">
+    <div class="page-heading">
+        <h1 class="page-title"><i class="fas fa-heartbeat text-primary me-2" aria-hidden="true"></i>Server Monitor</h1>
         <p class="text-secondary">Real-time status and running processes of the active database server.</p>
     </div>
 
@@ -10,7 +10,7 @@
             <div class="card border-0 shadow-sm" style="background: var(--card-bg);">
                 <div class="card-body">
                     <h6 class="text-secondary mb-2">Database Engine Version</h6>
-                    <h4 class="text-white mb-0"><i class="fas fa-code-branch text-info me-2"></i><?= htmlspecialchars($version) ?></h4>
+                    <h4 class="text-body mb-0"><i class="fas fa-code-branch text-info me-2" aria-hidden="true"></i><?= htmlspecialchars($version) ?></h4>
                 </div>
             </div>
         </div>
@@ -18,7 +18,7 @@
             <div class="card border-0 shadow-sm" style="background: var(--card-bg);">
                 <div class="card-body">
                     <h6 class="text-secondary mb-2">Uptime</h6>
-                    <h4 class="text-white mb-0"><i class="fas fa-clock text-success me-2"></i><?= htmlspecialchars($uptime) ?></h4>
+                    <h4 class="text-body mb-0"><i class="fas fa-clock text-success me-2" aria-hidden="true"></i><?= htmlspecialchars($uptime) ?></h4>
                 </div>
             </div>
         </div>
@@ -26,7 +26,7 @@
             <div class="card border-0 shadow-sm" style="background: var(--card-bg);">
                 <div class="card-body">
                     <h6 class="text-secondary mb-2">Active Threads</h6>
-                    <h4 class="text-white mb-0"><i class="fas fa-network-wired text-warning me-2"></i><?= htmlspecialchars($threads) ?></h4>
+                    <h4 class="text-body mb-0"><i class="fas fa-network-wired text-warning me-2" aria-hidden="true"></i><?= htmlspecialchars($threads) ?></h4>
                 </div>
             </div>
         </div>
@@ -35,9 +35,9 @@
     <!-- Process List -->
     <div class="card border-0 shadow-sm flex-fill" style="background: var(--card-bg);">
         <div class="card-header border-bottom border-secondary border-opacity-25 bg-transparent py-3 d-flex justify-content-between align-items-center">
-            <h5 class="mb-0 text-white"><i class="fas fa-tasks text-primary me-2"></i>Process List</h5>
+            <h5 class="mb-0 text-body"><i class="fas fa-tasks text-primary me-2" aria-hidden="true"></i>Process List</h5>
             <button class="btn btn-sm btn-outline-primary" id="refreshProcesses">
-                <i class="fas fa-sync-alt"></i> Refresh
+                <i class="fas fa-sync-alt" aria-hidden="true"></i> Refresh
             </button>
         </div>
         <div class="card-body p-0">
@@ -90,7 +90,7 @@ $(document).ready(function() {
             }},
             { data: 'Time', render: function(d) { return d + ' s'; } },
             { data: 'State', render: function(d) { return d ? d : '-'; } },
-            { data: 'Info', render: function(d) { 
+            { data: 'Info', render: function(d) {
                 if(!d) return '-';
                 if(d.length > 50) return `<span title="${d}">${d.substring(0,50)}...</span>`;
                 return d;
@@ -99,7 +99,7 @@ $(document).ready(function() {
                 if (row.Command === 'Daemon' || row.Command === 'Binlog Dump') return '';
                 return `
                     <button class="btn btn-sm btn-outline-danger border-0" onclick="killProcess(${row.Id})" title="Kill Process">
-                        <i class="fas fa-times-circle"></i>
+                        <i class="fas fa-times-circle" aria-hidden="true"></i>
                     </button>
                 `;
             }, className: 'text-end'}
@@ -116,7 +116,7 @@ $(document).ready(function() {
             icon.removeClass('fa-spin');
         }, false);
     });
-    
+
     // Auto refresh every 10 seconds
     setInterval(function() {
         table.ajax.reload(null, false);

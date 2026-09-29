@@ -34,6 +34,12 @@ class ExplorerController extends Controller
             $db = Database::getConnection();
             $driver = \App\Core\Session::get('active_driver');
             
+            // The local SQLite store holds application settings, not managed servers.
+            if ($driver === 'sqlite') {
+                echo json_encode([]);
+                return;
+            }
+
             // Get all databases
             $sql = \App\Core\SchemaBuilder::getDatabasesQuery($driver);
             $stmt = $db->query($sql);

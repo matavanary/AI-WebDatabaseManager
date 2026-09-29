@@ -1,181 +1,48 @@
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h3 class="mb-0">Dashboard Overview</h3>
-    <div>
-        <span class="badge bg-success bg-opacity-10 text-success border border-success p-2">
-            <i class="fas fa-server me-1"></i> Server Connected
-        </span>
+<div class="page-container">
+    <div class="page-heading dashboard-heading">
+        <div><h1 class="page-title">Dashboard</h1><p>Your databases, in one place.</p></div>
+        <a class="btn btn-primary" href="<?= \App\Core\Application::asset('sql') ?>"><i class="fas fa-code me-2" aria-hidden="true"></i>Open SQL Editor</a>
     </div>
+    <div class="metric-strip" aria-label="Workspace overview">
+        <?php foreach ([['Databases', 'db_count', 'fa-database'], ['Connections', 'connection_count', 'fa-link'], ['Users', 'user_count', 'fa-user'], ['Server version', 'version', 'fa-server']] as $metric): ?>
+        <div class="metric">
+            <span class="metric-icon"><i class="fas <?= $metric[2] ?>" aria-hidden="true"></i></span>
+            <div><span class="metric-label"><?= $metric[0] ?></span><strong class="metric-value <?= $metric[1] === 'version' ? 'metric-version' : '' ?>"><?= $stats[$metric[1]] === null ? '—' : htmlspecialchars((string)$stats[$metric[1]]) ?></strong></div>
+        </div>
+        <?php endforeach; ?>
+    </div>
+    <div class="dashboard-grid">
+        <section class="card workflow-card" aria-labelledby="start-title">
+            <h2 class="section-title" id="start-title">Start working</h2>
+            <?php foreach ([['explorer', 'fa-database', 'Explore your data', 'Browse databases, tables and view data.'], ['sql', 'fa-code', 'Write a query', 'Open the SQL editor and run queries.'], ['builder', 'fa-diagram-project', 'Build a query', 'Use the visual query builder to create queries.']] as $action): ?>
+            <a class="workflow-link" href="<?= \App\Core\Application::asset($action[0]) ?>">
+                <span class="workflow-icon"><i class="fas <?= $action[1] ?>" aria-hidden="true"></i></span>
+                <span><strong><?= $action[2] ?></strong><small><?= $action[3] ?></small></span>
+                <i class="fas fa-chevron-right" aria-hidden="true"></i>
+            </a>
+            <?php endforeach; ?>
+        </section>
+        <section class="card connection-summary" aria-labelledby="connection-title">
+            <h2 class="section-title" id="connection-title">Active connection</h2>
+            <div class="connection-name"><i class="fas fa-database" aria-hidden="true"></i><?= htmlspecialchars($connectionName) ?></div>
+            <p><?php if ($connectionState === 'connected'): ?>Connected. Open Explorer to browse your databases and tables.<?php elseif ($connectionState === 'unavailable'): ?>This connection could not be reached. Check the connection settings and try again.<?php else: ?>Select a connection to explore a database server.<?php endif; ?></p>
+            <?php if (\App\Core\Session::get('role') === 'administrator'): ?>
+            <a class="btn btn-outline-primary w-100" href="<?= \App\Core\Application::asset('connections') ?>"><i class="fas fa-sliders me-2" aria-hidden="true"></i>Manage connections</a>
+            <?php else: ?><p class="mb-0">Choose a saved connection from the menu above.</p><?php endif; ?>
+        </section>
+    </div>
+    <section class="card recent-activity" aria-labelledby="activity-title">
+        <h2 class="section-title" id="activity-title">Recent activity</h2>
+        <div class="table-responsive">
+            <table class="table"><thead><tr><th>Action</th><th>Database</th><th>Details</th><th>Time</th></tr></thead>
+                <tbody><?php foreach ($recentActivity as $entry): ?><tr>
+                    <td class="fw-medium"><?= htmlspecialchars($entry['action']) ?></td>
+                    <td><?= htmlspecialchars($entry['target_database'] ?: '—') ?></td>
+                    <td><?= htmlspecialchars($entry['details'] ?: '—') ?></td>
+                    <td class="text-secondary text-nowrap"><?= htmlspecialchars($entry['created_at']) ?></td>
+                </tr><?php endforeach; ?></tbody>
+            </table>
+        </div>
+        <?php if (!$recentActivity): ?><div class="empty-state"><i class="far fa-file-lines" aria-hidden="true"></i><strong><?= $activityAvailable ? 'No activity yet' : 'Activity is unavailable' ?></strong><p><?= $activityAvailable ? 'Your database activity will appear here.' : 'Check that the system database has been initialized.' ?></p></div><?php endif; ?>
+    </section>
 </div>
-
-<div class="row g-4 mb-4">
-    <div class="col-md-3">
-        <div class="card h-100 border-0 shadow-sm" style="background: linear-gradient(145deg, #1e2130 0%, #2a2e45 100%);">
-            <div class="card-body">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div>
-                        <h6 class="text-secondary mb-1">Total Databases</h6>
-                        <h2 class="mb-0 fw-bold"><?= $stats['db_count'] ?></h2>
-                    </div>
-                    <div class="rounded-circle bg-primary bg-opacity-10 p-3 text-primary d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
-                        <i class="fas fa-database fs-4"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <div class="col-md-3">
-        <div class="card h-100 border-0 shadow-sm" style="background: linear-gradient(145deg, #1e2130 0%, #2a2e45 100%);">
-            <div class="card-body">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div>
-                        <h6 class="text-secondary mb-1">Users</h6>
-                        <h2 class="mb-0 fw-bold"><?= $stats['user_count'] ?></h2>
-                    </div>
-                    <div class="rounded-circle bg-success bg-opacity-10 p-3 text-success d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
-                        <i class="fas fa-users fs-4"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-md-3">
-        <div class="card h-100 border-0 shadow-sm" style="background: linear-gradient(145deg, #1e2130 0%, #2a2e45 100%);">
-            <div class="card-body">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div>
-                        <h6 class="text-secondary mb-1">Version</h6>
-                        <h5 class="mb-0 fw-bold text-truncate" title="<?= htmlspecialchars($stats['version']) ?>" style="max-width: 120px;"><?= htmlspecialchars($stats['version']) ?></h5>
-                    </div>
-                    <div class="rounded-circle bg-info bg-opacity-10 p-3 text-info d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
-                        <i class="fas fa-code-branch fs-4"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-md-3">
-        <div class="card h-100 border-0 shadow-sm" style="background: linear-gradient(145deg, #1e2130 0%, #2a2e45 100%);">
-            <div class="card-body">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div>
-                        <h6 class="text-secondary mb-1">Server Status</h6>
-                        <h5 class="mb-0 fw-bold text-success">Online</h5>
-                    </div>
-                    <div class="rounded-circle bg-warning bg-opacity-10 p-3 text-warning d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
-                        <i class="fas fa-heartbeat fs-4"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="row g-4">
-    <div class="col-md-8">
-        <div class="card border-0 shadow-sm">
-            <div class="card-header border-0 bg-transparent pt-4 pb-0 px-4">
-                <h5 class="mb-0">Query Activity (Mock)</h5>
-            </div>
-            <div class="card-body p-4">
-                <canvas id="queryChart" height="100"></canvas>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-4">
-        <div class="card border-0 shadow-sm h-100">
-            <div class="card-header border-0 bg-transparent pt-4 pb-0 px-4">
-                <h5 class="mb-0">Recent Login History</h5>
-            </div>
-            <div class="card-body p-4">
-                <div class="d-flex align-items-center mb-3 pb-3 border-bottom border-secondary border-opacity-25">
-                    <div class="bg-primary bg-opacity-10 text-primary rounded-circle p-2 me-3">
-                        <i class="fas fa-user"></i>
-                    </div>
-                    <div>
-                        <h6 class="mb-0">admin</h6>
-                        <small class="text-secondary">Just now • 127.0.0.1</small>
-                    </div>
-                </div>
-                <div class="d-flex align-items-center">
-                    <div class="bg-primary bg-opacity-10 text-primary rounded-circle p-2 me-3">
-                        <i class="fas fa-user"></i>
-                    </div>
-                    <div>
-                        <h6 class="mb-0">admin</h6>
-                        <small class="text-secondary">2 hours ago • 127.0.0.1</small>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    if(typeof Chart !== 'undefined') {
-        const ctx = document.getElementById('queryChart').getContext('2d');
-        
-        // Gradient for line chart
-        let gradient = ctx.createLinearGradient(0, 0, 0, 400);
-        gradient.addColorStop(0, 'rgba(59, 130, 246, 0.5)');
-        gradient.addColorStop(1, 'rgba(59, 130, 246, 0.0)');
-        
-        new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: ['00:00', '04:00', '08:00', '12:00', '16:00', '20:00', '24:00'],
-                datasets: [{
-                    label: 'Queries per hour',
-                    data: [12, 19, 3, 5, 2, 3, 10],
-                    borderColor: '#3b82f6',
-                    backgroundColor: gradient,
-                    borderWidth: 2,
-                    tension: 0.4,
-                    fill: true,
-                    pointBackgroundColor: '#3b82f6',
-                    pointBorderColor: '#fff',
-                    pointBorderWidth: 2,
-                    pointRadius: 4,
-                    pointHoverRadius: 6
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: {
-                        display: false
-                    }
-                },
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        grid: {
-                            color: 'rgba(255, 255, 255, 0.05)',
-                            drawBorder: false
-                        },
-                        ticks: {
-                            color: '#94a3b8'
-                        }
-                    },
-                    x: {
-                        grid: {
-                            color: 'rgba(255, 255, 255, 0.05)',
-                            drawBorder: false
-                        },
-                        ticks: {
-                            color: '#94a3b8'
-                        }
-                    }
-                },
-                interaction: {
-                    intersect: false,
-                    mode: 'index',
-                },
-            }
-        });
-    }
-});
-</script>

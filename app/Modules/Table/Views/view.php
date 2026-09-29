@@ -1,15 +1,15 @@
-<div class="h-100 d-flex flex-column w-100 p-4">
-    <div class="d-flex justify-content-between align-items-center mb-4">
+<div class="page-container table-view-page">
+    <div class="page-heading">
         <div>
-            <h4 class="mb-0 text-white"><i class="fas fa-table text-primary me-2"></i><?= htmlspecialchars($tableName) ?></h4>
+            <h1 class="page-title"><i class="fas fa-table text-primary me-2" aria-hidden="true"></i><?= htmlspecialchars($tableName) ?></h1>
             <small class="text-secondary"><?= htmlspecialchars($dbName) ?></small>
         </div>
         <div>
             <button class="btn btn-primary" onclick="showAddModal()">
-                <i class="fas fa-plus me-1"></i> Add Row
+                <i class="fas fa-plus me-1" aria-hidden="true"></i> Add Row
             </button>
-            <button class="btn btn-outline-secondary ms-2" onclick="table.ajax.reload()">
-                <i class="fas fa-sync-alt"></i>
+            <button class="btn btn-outline-secondary ms-2" onclick="table.ajax.reload()" aria-label="Refresh table">
+                <i class="fas fa-sync-alt" aria-hidden="true"></i>
             </button>
         </div>
     </div>
@@ -35,22 +35,22 @@
 </div>
 
 <!-- Simple Add Modal -->
-<div class="modal fade" id="addModal" tabindex="-1" aria-hidden="true" data-bs-theme="dark">
+<div class="modal fade" id="addModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content" style="background: var(--card-bg); border-color: var(--border-color);">
             <div class="modal-header border-bottom-0">
-                <h5 class="modal-title text-white">Add Row</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                <h5 class="modal-title text-body">Add Row</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <form id="addForm">
                     <!-- Note: For Phase 1 we use basic input texts. Ideally, these should vary by data type -->
-                    <?php foreach ($columns as $col): 
+                    <?php foreach ($columns as $col):
                         if ($col['Extra'] === 'auto_increment' || strpos(strtolower($col['Extra']), 'identity') !== false) continue;
                     ?>
                         <div class="mb-3">
                             <label class="form-label text-secondary"><?= htmlspecialchars($col['Field']) ?> <small>(<?= htmlspecialchars($col['Type']) ?>)</small></label>
-                            <input type="text" class="form-control bg-dark text-white border-secondary" name="<?= htmlspecialchars($col['Field']) ?>">
+                            <input type="text" class="form-control bg-body-tertiary text-body border-secondary" name="<?= htmlspecialchars($col['Field']) ?>">
                         </div>
                     <?php endforeach; ?>
                 </form>
@@ -64,22 +64,22 @@
 </div>
 
 <!-- Edit Modal -->
-<div class="modal fade" id="editModal" tabindex="-1" aria-hidden="true" data-bs-theme="dark">
+<div class="modal fade" id="editModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content" style="background: var(--card-bg); border-color: var(--border-color);">
             <div class="modal-header border-bottom-0">
-                <h5 class="modal-title text-white">Edit Row</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                <h5 class="modal-title text-body">Edit Row</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <form id="editForm">
                     <input type="hidden" name="pk_value" id="edit_pk_value">
-                    <?php foreach ($columns as $col): 
+                    <?php foreach ($columns as $col):
                         $isPk = ($col['Field'] === $primaryKey);
                     ?>
                         <div class="mb-3">
                             <label class="form-label text-secondary"><?= htmlspecialchars($col['Field']) ?> <small>(<?= htmlspecialchars($col['Type']) ?>)</small></label>
-                            <input type="text" class="form-control bg-dark text-white border-secondary" name="<?= htmlspecialchars($col['Field']) ?>" <?= $isPk ? 'readonly' : '' ?>>
+                            <input type="text" class="form-control bg-body-tertiary text-body border-secondary" name="<?= htmlspecialchars($col['Field']) ?>" <?= $isPk ? 'readonly' : '' ?>>
                         </div>
                     <?php endforeach; ?>
                 </form>
@@ -118,13 +118,13 @@ $(document).ready(function() {
                 render: function(data, type, row) {
                     const pkValue = row['<?= $primaryKey ?>'];
                     return `
-                        <button class="btn btn-sm btn-outline-info border-0 me-1" onclick="editRow('${pkValue}', this)"><i class="fas fa-edit"></i></button>
-                        <button class="btn btn-sm btn-outline-danger border-0" onclick="deleteRow('${pkValue}')"><i class="fas fa-trash"></i></button>
+                        <button class="btn btn-sm btn-outline-info border-0 me-1" onclick="editRow('${pkValue}', this)" aria-label="Edit row"><i class="fas fa-edit" aria-hidden="true"></i></button>
+                        <button class="btn btn-sm btn-outline-danger border-0" onclick="deleteRow('${pkValue}')" aria-label="Delete row"><i class="fas fa-trash" aria-hidden="true"></i></button>
                     `;
                 }
             },
             <?php foreach ($columns as $col): ?>
-            { 
+            {
                 data: '<?= htmlspecialchars($col['Field']) ?>',
                 render: function(data, type, row) {
                     if (data === null) return '<span class="text-secondary font-italic">NULL</span>';
@@ -138,7 +138,7 @@ $(document).ready(function() {
             <?php endforeach; ?>
         ],
         scrollX: true,
-        scrollY: 'calc(100vh - 350px)',
+        scrollY: 'min(55vh, 520px)',
         scrollCollapse: true,
         pageLength: 50,
         dom: "<'row mb-3'<'col-sm-12 col-md-6'l><'col-sm-12 col-md-6'f>>" +
@@ -164,7 +164,7 @@ function saveRow() {
         table: '<?= $tableName ?>',
         data: {}
     };
-    
+
     $.each(formData, function() {
         data.data[this.name] = this.value;
     });
@@ -186,10 +186,10 @@ function saveRow() {
 function editRow(id, btn) {
     var tr = $(btn).closest('tr');
     var rowData = table.row(tr).data();
-    
+
     $('#editForm')[0].reset();
     $('#edit_pk_value').val(id);
-    
+
     for (var key in rowData) {
         if (rowData.hasOwnProperty(key)) {
             var input = $('#editForm').find('[name="' + key + '"]');
@@ -198,7 +198,7 @@ function editRow(id, btn) {
             }
         }
     }
-    
+
     var modal = new bootstrap.Modal(document.getElementById('editModal'));
     modal.show();
 }
@@ -212,7 +212,7 @@ function saveEdit() {
         pk_value: $('#edit_pk_value').val(),
         data: {}
     };
-    
+
     $.each(formData, function() {
         if (this.name !== 'pk_value' && this.name !== '<?= $primaryKey ?>') {
             data.data[this.name] = this.value;

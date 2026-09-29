@@ -1,11 +1,11 @@
-<div class="p-4 w-100 h-100 d-flex flex-column">
-    <div class="d-flex justify-content-between align-items-center mb-4">
+<div class="page-container">
+    <div class="page-heading">
         <div>
-            <h4 class="text-white mb-0"><i class="fas fa-users text-primary me-2"></i>User Management</h4>
+            <h1 class="page-title"><i class="fas fa-users text-primary me-2" aria-hidden="true"></i>User Management</h1>
             <p class="text-secondary mb-0">Manage system administrators and operators.</p>
         </div>
         <button class="btn btn-primary fw-bold" onclick="$('#addUserModal').modal('show')">
-            <i class="fas fa-user-plus me-1"></i> Add User
+            <i class="fas fa-user-plus me-1" aria-hidden="true"></i> Add User
         </button>
     </div>
 
@@ -25,7 +25,7 @@
                         <?php foreach ($users as $user): ?>
                         <tr>
                             <td>
-                                <span class="fw-bold text-white"><i class="fas fa-user me-2 text-secondary"></i><?= htmlspecialchars($user['username']) ?></span>
+                                <span class="fw-bold text-body"><i class="fas fa-user me-2 text-secondary" aria-hidden="true"></i><?= htmlspecialchars($user['username']) ?></span>
                             </td>
                             <td>
                                 <?php if ($user['role'] === 'administrator'): ?>
@@ -37,11 +37,11 @@
                             <td class="text-secondary"><?= htmlspecialchars($user['created_at']) ?></td>
                             <td class="text-end">
                                 <button class="btn btn-sm btn-outline-info border-0 me-1" onclick="editUser(<?= $user['id'] ?>, '<?= htmlspecialchars($user['username']) ?>', '<?= htmlspecialchars($user['role']) ?>')">
-                                    <i class="fas fa-edit"></i>
+                                    <i class="fas fa-edit" aria-hidden="true"></i>
                                 </button>
                                 <?php if ($user['id'] != \App\Core\Session::get('user_id')): ?>
                                 <button class="btn btn-sm btn-outline-danger border-0" onclick="deleteUser(<?= $user['id'] ?>, '<?= htmlspecialchars($user['username']) ?>')">
-                                    <i class="fas fa-trash"></i>
+                                    <i class="fas fa-trash" aria-hidden="true"></i>
                                 </button>
                                 <?php endif; ?>
                             </td>
@@ -55,26 +55,26 @@
 </div>
 
 <!-- Add User Modal -->
-<div class="modal fade" id="addUserModal" tabindex="-1" aria-hidden="true" data-bs-theme="dark">
+<div class="modal fade" id="addUserModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content" style="background: var(--card-bg); border-color: var(--border-color);">
             <div class="modal-header border-bottom-0">
-                <h5 class="modal-title text-white">Add New User</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                <h5 class="modal-title text-body">Add New User</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form id="addUserForm">
                 <div class="modal-body">
                     <div class="mb-3">
                         <label class="form-label text-secondary">Username</label>
-                        <input type="text" class="form-control bg-dark text-white border-secondary" name="username" required>
+                        <input type="text" class="form-control bg-body-tertiary text-body border-secondary" name="username" required>
                     </div>
                     <div class="mb-3">
                         <label class="form-label text-secondary">Password</label>
-                        <input type="password" class="form-control bg-dark text-white border-secondary" name="password" required>
+                        <input type="password" class="form-control bg-body-tertiary text-body border-secondary" name="password" required>
                     </div>
                     <div class="mb-3">
                         <label class="form-label text-secondary">Role</label>
-                        <select class="form-select bg-dark text-white border-secondary" name="role" required>
+                        <select class="form-select bg-body-tertiary text-body border-secondary" name="role" required>
                             <option value="administrator">Administrator</option>
                             <option value="developer">Developer</option>
                             <option value="viewer" selected>Viewer</option>
@@ -91,27 +91,27 @@
 </div>
 
 <!-- Edit User Modal -->
-<div class="modal fade" id="editUserModal" tabindex="-1" aria-hidden="true" data-bs-theme="dark">
+<div class="modal fade" id="editUserModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content" style="background: var(--card-bg); border-color: var(--border-color);">
             <div class="modal-header border-bottom-0">
-                <h5 class="modal-title text-white">Edit User</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                <h5 class="modal-title text-body">Edit User</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form id="editUserForm">
                 <input type="hidden" name="id" id="edit-id">
                 <div class="modal-body">
                     <div class="mb-3">
                         <label class="form-label text-secondary">Username</label>
-                        <input type="text" class="form-control bg-dark text-white border-secondary" name="username" id="edit-username" required>
+                        <input type="text" class="form-control bg-body-tertiary text-body border-secondary" name="username" id="edit-username" required>
                     </div>
                     <div class="mb-3">
                         <label class="form-label text-secondary">Password <small class="text-muted">(Leave blank to keep current)</small></label>
-                        <input type="password" class="form-control bg-dark text-white border-secondary" name="password" id="edit-password">
+                        <input type="password" class="form-control bg-body-tertiary text-body border-secondary" name="password" id="edit-password">
                     </div>
                     <div class="mb-3">
                         <label class="form-label text-secondary">Role</label>
-                        <select class="form-select bg-dark text-white border-secondary" name="role" id="edit-role" required>
+                        <select class="form-select bg-body-tertiary text-body border-secondary" name="role" id="edit-role" required>
                             <option value="administrator">Administrator</option>
                             <option value="developer">Developer</option>
                             <option value="viewer">Viewer</option>
@@ -137,7 +137,7 @@ $(document).ready(function() {
         e.preventDefault();
         var btn = $('#saveUserBtn');
         btn.prop('disabled', true);
-        
+
         $.ajax({
             url: window.BASE_URL + '/api/users/create',
             type: 'POST',
@@ -163,7 +163,7 @@ $(document).ready(function() {
         e.preventDefault();
         var btn = $('#updateUserBtn');
         btn.prop('disabled', true);
-        
+
         $.ajax({
             url: window.BASE_URL + '/api/users/update',
             type: 'POST',
